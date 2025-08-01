@@ -56,3 +56,10 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
+
+// After sequelize initialization
+const User = require('./models/user');
+sequelize.sync({ force: true }).then(async () => {
+  console.log('Database synced');
+  // Optionally seed the database with test data
+});
