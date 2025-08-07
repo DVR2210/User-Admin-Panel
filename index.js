@@ -1,65 +1,127 @@
-// Main entry point for the Node.js application
+// const express = require('express');
+// const session = require('express-session');
+// const csurf = require('csurf');
+// const bcrypt = require('bcrypt');
+// const jwt = require('jsonwebtoken');
+// //const { Sequelize, DataTypes } = require('sequelize'); // Импортируем Sequelize и DataTypes
+// const path = require('path');
+// const { router: authRouter, authenticate } = require('./routes/auth');
+// const User = require('./models/user');
+
+// const app = express();
+// const port = process.env.PORT || 3000;
+
+// // Middleware
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+
+// // View engine setup
+// app.set('view engine', 'ejs');
+// app.set('views', path.join(__dirname, 'views'));
+// app.use(express.static(path.join(__dirname, 'public')));
+
+// // Session
+// app.use(session({
+//   secret: 'your-secret-key',
+//   resave: false,
+//   saveUninitialized: false,
+// }));
+
+// // CSRF
+// app.use(csurf());
+
+// // Database setup
+// const sequelize = new Sequelize({
+//   dialect: 'sqlite',
+//   storage: path.join(__dirname, 'database.sqlite'),
+// });
+
+// // Test connection
+// sequelize.authenticate()
+//   .then(() => console.log('Database connected'))
+//   .catch(err => console.error('Database connection error:', err));
+
+// // Sync models
+// sequelize.sync({ force: true }).then(async () => {
+//   console.log('Database synced');
+//   await User.create({
+//     username: 'admin',
+//     password: await bcrypt.hash('admin123', 10),
+//     first_name: 'Admin',
+//     last_name: 'User',
+//     gender: 'male',
+//     birthdate: '1990-01-01',
+//   });
+// });
+
+// // Routes
+// app.use('/auth', authRouter);
+
+// app.get('/login', (req, res) => {
+//   res.render('login', { csrfToken: req.csrfToken() });
+// });
+
+// app.get('/users', authenticate, (req, res) => {
+//   res.send('Users page (protected)');
+// });
+
+// app.get('/', (req, res) => {
+//   res.redirect('/login');
+// });
+
+// app.listen(port, () => {
+//   console.log(`Server running on http://localhost:${port}`);
+// });
+
+// // Экспортируем все необходимые объекты
+// module.exports = { sequelize, Sequelize, DataTypes };
+
 const express = require('express');
 const session = require('express-session');
 const csurf = require('csurf');
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { Sequelize } = require('sequelize');
 const path = require('path');
+const { router: authRouter, authenticate } = require('./routes/auth');
+const { User, sequelize } = require('./db'); // Импортируем из db.js
  
-// Initialize Express app
 const app = express();
 const port = process.env.PORT || 3000;
  
-// Middleware for parsing JSON and URL-encoded data
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
  
-// Set up EJS as the view engine
+// View engine setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
- 
-// Serve static files (CSS, JS, etc.)
 app.use(express.static(path.join(__dirname, 'public')));
  
-// Set up session management
+// Session
 app.use(session({
-  secret: 'your-secret-key', // Replace with a secure key
+  secret: 'your-secret-key',
   resave: false,
   saveUninitialized: false,
 }));
  
-// CSRF protection middleware
+// CSRF
 app.use(csurf());
  
-// Initialize Sequelize with SQLite
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: './database.sqlite',
+// Routes
+app.use('/auth', authRouter);
+ 
+app.get('/login', (req, res) => {
+  res.render('login', { csrfToken: req.csrfToken() });
 });
  
-// Test database connection
-sequelize.authenticate()
-  .then(() => console.log('Database connected'))
-  .catch(err => console.error('Database connection error:', err));
+app.get('/users', authenticate, (req, res) => {
+  res.send('Users page (protected)');
+});
  
-// Placeholder for routes
-// app.use('/api/users', require('./routes/users'));
-// app.use('/auth', require('./routes/auth'));
- 
-// Basic route for testing
 app.get('/', (req, res) => {
-  res.render('index', { csrfToken: req.csrfToken() });
+  res.redirect('/login');
 });
  
-// Start the server
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
-
-// After sequelize initialization
-const User = require('./models/user');
-sequelize.sync({ force: true }).then(async () => {
-  console.log('Database synced');
-  // Optionally seed the database with test data
-});
+ 

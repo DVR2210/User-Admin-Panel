@@ -2,7 +2,8 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+//const User = require('../models/user');
+const { User } = require('../db')
 const router = express.Router();
 
 // Login route
@@ -49,5 +50,6 @@ const authenticate = (req, res, next) => {
     res.redirect('/login');
   }
 };
+
 
 module.exports = { router, authenticate };

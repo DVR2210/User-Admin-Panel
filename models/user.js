@@ -1,8 +1,6 @@
-// User model for Sequelize
-const { DataTypes } = require('sequelize');
-const sequelize = require('../index');
- 
-// Define User model
+const { sequelize, Sequelize, DataTypes } = require('../index');
+
+
 const User = sequelize.define('User', {
   username: {
     type: DataTypes.STRING,
@@ -48,5 +46,5 @@ const User = sequelize.define('User', {
   tableName: 'users',
   timestamps: false,
 });
- 
+
 module.exports = User;
