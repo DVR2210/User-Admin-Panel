@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add User - Admin Panel</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <h1>Add New User</h1>
+  <form action="/users/add" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div><input type="text" name="username" placeholder="Username" required></div>
+    <div><input type="password" name="password" placeholder="Password" required></div>
+    <div><input type="text" name="first_name" placeholder="First Name" required></div>
+    <div><input type="text" name="last_name" placeholder="Last Name" required></div>
+    <div>
+      <select name="gender" required>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <div><input type="date" name="birthdate" required></div>
+    <button type="submit">Add User</button>
+  </form>
+  <a href="/users">Back to Users</a>
+</body>
+</html>
