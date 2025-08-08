@@ -40,6 +40,11 @@
         <% }) %>
       </tbody>
     </table>
+    <div>
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <a href="/users?page=<%= i %>" <%= i === currentPage ? 'style="font-weight:bold;"' : '' %>><%= i %></a>
+      <% } %>
+    </div>
   <% } else { %>
     <p>No users found.</p>
   <% } %>
